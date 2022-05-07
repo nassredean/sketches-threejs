@@ -15,7 +15,9 @@ void main() {
   float now = clamp((time - delay) / duration, 0.0, 1.0);
 
   // add white noise to the screen
-  float whiteNoise = random(vUv.xy * time) * 0.1 - 0.1;
+  float r = random(vUv.xy * time) * 0.1 - 0.1;
+  vec3 baseWhite = vec3(0.97, .92, .87);
+  vec3 whiteNoise = r * baseWhite;
 
   // add monitor scan lines
   // vUv is the coordinate of the calculated pixel in UV measrement (0 to 1)
