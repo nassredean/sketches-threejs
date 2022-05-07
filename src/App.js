@@ -55,14 +55,15 @@ const PostEffectCanvas = () => {
       requestAnimationFrame(animate);
     };
 
-//     let onWindowResize = function () {
-//       camera.aspect = window.innerWidth / window.innerHeight;
-//       camera.updateProjectionMatrix();
-//       renderer.setSize(window.innerWidth, window.innerHeight);
-//     };
+    let onWindowResize = function () {
+      rtCamera.aspect = window.innerWidth / window.innerHeight;
+      rtCamera.updateProjectionMatrix();
+      renderTarget.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      postEffect.resize();
+    }
 
-    // window.addEventListener("resize", onWindowResize, false);
-
+    window.addEventListener("resize", onWindowResize, false);
     animate();
 
     return () => mountRef.current.removeChild(renderer.domElement);
