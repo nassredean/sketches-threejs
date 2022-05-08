@@ -3,7 +3,7 @@ import * as THREE from "three";
 export default class PostEffect {
   constructor(texture) {
     this.uniforms = {
-      // time elapsed since last frame
+      // time elapsed since start
       time: {
         type: "f",
         value: 0,
@@ -41,7 +41,7 @@ export default class PostEffect {
 
   resize() {
     this.uniforms.resolution.value.set(
-      document.body.clientWidth,
+      window.innerWidth,
       window.innerHeight
     );
   }
