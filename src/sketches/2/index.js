@@ -1,15 +1,12 @@
 import * as THREE from "three";
 import { useEffect, useRef } from "react";
 
-import PostEffect from "./PostEffect";
-
 const Scene = () => {
   const mountRef = useRef(null);
 
   useEffect(() => {
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+    const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(new THREE.Color("white"), 1.0);
 
     const renderTarget = new THREE.WebGLRenderTarget(
       window.innerWidth,
@@ -27,8 +24,6 @@ const Scene = () => {
       10000 // far plane
     );
 
-    const postEffect = new PostEffect(renderTarget.texture);
-    scene.add(postEffect.obj);
 
     const clock = new THREE.Clock();
     clock.start();
@@ -43,9 +38,6 @@ const Scene = () => {
       renderer.render(rtScene, rtCamera);
       renderer.setRenderTarget(null);
 
-      // update the post effect
-      postEffect.render(time);
-
       // render the scene to the canvas
       renderer.render(scene, camera);
 
@@ -57,7 +49,6 @@ const Scene = () => {
       rtCamera.updateProjectionMatrix();
       renderTarget.setSize(window.innerWidth, window.innerHeight);
       renderer.setSize(window.innerWidth, window.innerHeight);
-      postEffect.resize();
     };
 
     window.addEventListener("resize", onWindowResize, false);
