@@ -5,54 +5,58 @@ const Scene = () => {
   const mountRef = useRef(null);
 
   useEffect(() => {
+    // scene setup
+    const scene = new THREE.Scene();
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const camera = new THREE.PerspectiveCamera(
+      70,
+      window.innerWidth / window.innerHeight,
+      1,
+      1000
+    );
+
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    mountRef.current.appendChild(renderer.domElement);
 
-    const renderTarget = new THREE.WebGLRenderTarget(
+    //////////////Create some arbitrary objects in our scence
+    //Let's create a red box
+    const redMaterial = new THREE.MeshBasicMaterial({ color: 0xf06565 });
+    const boxGeometry = new THREE.BoxGeometry(5, 5, 5);
+    const boxObject = new THREE.Mesh(boxGeometry, redMaterial);
+    boxObject.position.z = -10;
+    scene.add(boxObject);
+
+    ///And a blue plane behind it
+    const blueMaterial = new THREE.MeshBasicMaterial({ color: 0x7074ff });
+    const plane = new THREE.PlaneBufferGeometry(
       window.innerWidth,
       window.innerHeight
     );
+    const planeObject = new THREE.Mesh(plane, blueMaterial);
+    planeObject.position.z = -15;
+    scene.add(planeObject);
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const render = function () {
+      requestAnimationFrame(render);
 
-    const rtScene = new THREE.Scene();
-    const rtCamera = new THREE.PerspectiveCamera(
-      45, // fov
-      window.innerWidth / window.innerHeight, // ascpect ratio
-      1, // near plane
-      10000 // far plane
-    );
+      //Make the box rotate on box axises
+      boxObject.rotation.y += 0.01;
+      boxObject.rotation.x += 0.01;
 
-
-    const clock = new THREE.Clock();
-    clock.start();
-
-    mountRef.current.appendChild(renderer.domElement);
-
-    const animate = function () {
-      const time = clock.getDelta();
-
-      // draw render target scene to render target
-      renderer.setRenderTarget(renderTarget);
-      renderer.render(rtScene, rtCamera);
-      renderer.setRenderTarget(null);
-
-      // render the scene to the canvas
+      //Finally, draw to the screen
       renderer.render(scene, camera);
-
-      requestAnimationFrame(animate);
     };
 
     let onWindowResize = function () {
-      rtCamera.aspect = window.innerWidth / window.innerHeight;
-      rtCamera.updateProjectionMatrix();
-      renderTarget.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
     window.addEventListener("resize", onWindowResize, false);
-    animate();
+    render();
 
     return () => mountRef.current?.removeChild(renderer.domElement);
   }, []);

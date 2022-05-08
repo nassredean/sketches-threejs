@@ -10,6 +10,7 @@ const Scene = () => {
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(new THREE.Color("white"), 1.0);
+    mountRef.current.appendChild(renderer.domElement);
 
     const renderTarget = new THREE.WebGLRenderTarget(
       window.innerWidth,
@@ -32,8 +33,6 @@ const Scene = () => {
 
     const clock = new THREE.Clock();
     clock.start();
-
-    mountRef.current.appendChild(renderer.domElement);
 
     const animate = function () {
       const time = clock.getDelta();

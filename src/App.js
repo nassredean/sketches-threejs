@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 import Page from "./shared/components/Page";
