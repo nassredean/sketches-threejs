@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import App from "./App";
-import Sketch1 from "./Sketch1";
+import Sketch1 from "./sketches/1";
 
 import "./reset.css";
 import "./index.css";

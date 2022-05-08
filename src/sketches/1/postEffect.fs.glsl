@@ -9,7 +9,7 @@ varying vec2 vUv;
 const float duration = 8.0;
 const float delay = 4.0;
 
-#pragma glslify: random = require(./glslutil/random);
+#pragma glslify: random = require(../../shared/glsl/random);
 
 void main() {
   float now = clamp((time - delay) / duration, 0.0, 1.0);

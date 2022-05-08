@@ -1,20 +1,24 @@
 import * as THREE from "three";
 import { useEffect, useRef } from "react";
 
-import PostEffect from "./object3d/PostEffect";
+import PostEffect from "./PostEffect";
 
 const PostEffectCanvas = () => {
   const mountRef = useRef(null);
 
   useEffect(() => {
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(new THREE.Color("white"), 1.0);
+
     const renderTarget = new THREE.WebGLRenderTarget(
       window.innerWidth,
       window.innerHeight
     );
+
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
     const rtScene = new THREE.Scene();
     const rtCamera = new THREE.PerspectiveCamera(
       45, // fov
@@ -22,14 +26,14 @@ const PostEffectCanvas = () => {
       1, // near plane
       10000 // far plane
     );
-    const clock = new THREE.Clock();
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    mountRef.current.appendChild(renderer.domElement);
-    clock.start();
 
     const postEffect = new PostEffect(renderTarget.texture);
     scene.add(postEffect.obj);
+
+    const clock = new THREE.Clock();
+    clock.start();
+
+    mountRef.current.appendChild(renderer.domElement);
 
     const animate = function () {
       const time = clock.getDelta();
