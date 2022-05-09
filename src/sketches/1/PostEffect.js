@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import FS from "./postEffect.fs.glsl";
+import VS from "./postEffect.vs.glsl";
 
 export default class PostEffect {
   constructor(texture) {
@@ -29,8 +31,8 @@ export default class PostEffect {
       new THREE.PlaneBufferGeometry(2, 2),
       new THREE.RawShaderMaterial({
         uniforms: this.uniforms,
-        vertexShader: require("./postEffect.vs.glsl").default,
-        fragmentShader: require("./postEffect.fs.glsl").default,
+        vertexShader: VS,
+        fragmentShader: FS,
       })
     );
   }
