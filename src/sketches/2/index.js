@@ -1,51 +1,43 @@
 import * as THREE from "three";
 import { useEffect, useRef } from "react";
+import Cube from './Cube';
 
 const Scene = () => {
   const mountRef = useRef(null);
 
   useEffect(() => {
-    // scene setup
     const scene = new THREE.Scene();
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const clock = new THREE.Clock();
+
+    // Camera setup
     const camera = new THREE.PerspectiveCamera(
-      70,
+      15,
       window.innerWidth / window.innerHeight,
       1,
-      1000
+      10000
     );
+    camera.position.z = 10;
 
-    const renderer = new THREE.WebGLRenderer();
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
     mountRef.current.appendChild(renderer.domElement);
 
-    //////////////Create some arbitrary objects in our scence
-    //Let's create a red box
-    const redMaterial = new THREE.MeshBasicMaterial({ color: 0xf06565 });
-    const boxGeometry = new THREE.BoxGeometry(5, 5, 5);
-    const boxObject = new THREE.Mesh(boxGeometry, redMaterial);
-    boxObject.position.z = -10;
-    scene.add(boxObject);
-
-    ///And a blue plane behind it
-    const blueMaterial = new THREE.MeshBasicMaterial({ color: 0x7074ff });
-    const plane = new THREE.PlaneBufferGeometry(
-      window.innerWidth,
-      window.innerHeight
-    );
-    const planeObject = new THREE.Mesh(plane, blueMaterial);
-    planeObject.position.z = -15;
-    scene.add(planeObject);
+    // Add our box with custom shaders to the scene
+    const boxGeo = new THREE.BoxGeometry(1, 1, 1);
+    const cube = new Cube(boxGeo);
+    scene.add(cube.obj)
 
     const render = function () {
       requestAnimationFrame(render);
-
-      //Make the box rotate on box axises
-      boxObject.rotation.y += 0.01;
-      boxObject.rotation.x += 0.01;
-
-      //Finally, draw to the screen
+      cube.obj.rotation.y += 0.01;
+      cube.obj.rotation.x += 0.01;
+      // update time uniform
+      cube.uniforms.u_time.value = clock.getElapsedTime();
+      // animation loop
       renderer.render(scene, camera);
     };
 
