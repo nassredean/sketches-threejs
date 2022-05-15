@@ -15,26 +15,12 @@ void main() {
   // remap the distance and flip for a subtle gradient
   float rd = map(d, 0.0, 0.7, 1.0, 0.0);
 
-  vec3 color = vec3(rd);
+
+  vec2 edgeUVS = abs(v_position - 0.5);
+  float edge = step(0.49, (max(edgeUVS.x, edgeUVS.y) * 2.0));
+  
+  vec3 color = vec3(edge + rd);
 
 
-  // Edge detection
-  // float ddxy = dFdx(v_position.x) + dFdy(v_position.y);
-  // vec2 ddxy = 1.0 - (v_position / fwidth(v_position));
-  vec2 ddxy = fwidth(v_position);
-
-  vec2 e1 = (v_position / ddxy);
-
-
-
-  /* if (d < 0.5) { */
-  /*   color = vec3(d); */
-  /* } */
-
-  // vec3 color = vec3(v_position, 0.0);
-  // vec3 color = vec3(v_position + vec2(0.5, 0.5), 0.0);
-  // gl_FragColor = vec4(e1, 0.0, 1.0);
-  gl_FragColor = vec4(e1, 0.0, 1.0);
-
-  // gl_FragColor = vec4(1.0, 0.0, sin(u_time * 10.0) + 0.5, 1.0).rgba;
+  gl_FragColor = vec4(color, 1.0);
 }
