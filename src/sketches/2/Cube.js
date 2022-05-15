@@ -4,9 +4,13 @@ import FS from './cube.fs.glsl';
 
 export default class Cube {
   constructor(geometry) {
+    console.log(window.innerWidth);
+    console.log(window.innerHeight);
     this.uniforms = {
       u_time: { value: 0.0 },
+      u_resolution: { value: { x: window.innerWidth, y: window.innerHeight } },
     };
+
     this.obj = this.createObj(geometry);
   }
 

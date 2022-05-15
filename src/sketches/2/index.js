@@ -20,31 +20,51 @@ const Scene = () => {
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({
-      alpha: true,
       antialias: true,
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(new THREE.Color("blue"), 1.0);
     mountRef.current.appendChild(renderer.domElement);
 
     // Add our box with custom shaders to the scene
     const boxGeo = new THREE.BoxGeometry(1, 1, 1);
-    const cube = new Cube(boxGeo);
+    const planeGeo = new THREE.PlaneGeometry(1, 1);
+    const cube = new Cube(planeGeo);
     scene.add(cube.obj)
 
-    const render = function () {
+    const render = function() {
       requestAnimationFrame(render);
-      cube.obj.rotation.y += 0.01;
-      cube.obj.rotation.x += 0.01;
-      // update time uniform
+
+      // rotation of cube
+      // cube.obj.rotation.y += 0.01;
+      // cube.obj.rotation.x += 0.01;
+
+      // update uniforms
       cube.uniforms.u_time.value = clock.getElapsedTime();
-      // animation loop
+
       renderer.render(scene, camera);
     };
 
-    let onWindowResize = function () {
-      camera.aspect = window.innerWidth / window.innerHeight;
+    let onWindowResize = function() {
+      const aspectRatio = window.innerWidth / window.innerHeight;
+      let width, height;
+      if (aspectRatio >= 1) {
+        width = 1;
+        height = (window.innerHeight / window.innerWidth) * width;
+      } else {
+        width = aspectRatio;
+        height = 1;
+      }
+      camera.left = -width;
+      camera.right = width;
+      camera.top = height;
+      camera.bottom = -height;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
+      if (cube.uniforms.u_resolution !== undefined) {
+        cube.uniforms.u_resolution.value.x = window.innerWidth;
+        cube.uniforms.u_resolution.value.y = window.innerHeight;
+      }
     };
 
     window.addEventListener("resize", onWindowResize, false);
